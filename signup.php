@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div id="emailHelp" class="form-text">Make Sure to enter your password correctly.</div>
             </div>
             <button type="submit" class="btn btn-primary">SignUp</button>
-            <a href="index.php" class="btn btn-primary">Login</a>
+            <a href="index.php" class="btn btn-dark">Login</a>
             <button type="reset" class="btn btn-light">Reset Form</button>
         </form>
     </div>

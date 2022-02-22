@@ -1,4 +1,12 @@
 <?php
+session_start();
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin']!=true){
+  header('Location: index.php');
+  exit();
+}
+?>
+
+<?php
 require 'partials/_database.php';
 $sql = 'CREATE TABLE IF NOT EXISTS data (sno int(200) auto_increment primary key,name varchar(20) not null,title varchar(100) NOT NULL, description varchar(255) NOT NULL,postdate date not null,posttime time not null)';
 $result = mysqli_query($conn, $sql);
@@ -71,8 +79,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
   </nav>
   <div class="container my-5">
-    <h1>Add your Notes Here..!</h1>
-    <form action='homepage.php' method='post'>
+    <h1>Welcome <?php echo $_SESSION['username']; ?>..!  Add your Notes Here</h1>
+    <form action='homepage.php' method='post'> 
       <div class="form-group">
         <label for="exampleInputEmail1">Title</label>
         <input type="text" class="form-control" id="title" aria-describedby="emailHelp" placeholder="Enter Title" name="title">

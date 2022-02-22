@@ -6,18 +6,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $username = $_POST['username'];
   $password = $_POST['password'];
 
-$sql = "SELECT * from users where user_name='$username' and password='$password'";
-$result = mysqli_query($conn, $sql);
-$num = mysqli_num_rows($result);
-if ($num == 1) {
+  $sql = "SELECT * from users where user_name='$username' and password='$password'";
+  $result = mysqli_query($conn, $sql);
+  $num = mysqli_num_rows($result);
+  if ($num == 1) {
 
-  session_start();
-  $_SESSION['loggedin']=true;
-  $_SESSION['username']=$username;
-  header("Location: homepage.php");
-} else {
-  $error = true;
-}
+    session_start();
+    $_SESSION['loggedin'] = true;
+    $_SESSION['username'] = $username;
+    header("Location: homepage.php");
+  } else {
+    $error = true;
+  }
 }
 ?>
 
