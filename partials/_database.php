@@ -1,13 +1,13 @@
 <?php
-$servername = 'db4nfree.net';
+/*$servername = 'db4free.net';
 $usernames = 'bishalde';
 $password = 'bishal@5741';
-$database = 'clustix';
+$database = 'clustix';*/
 
-/*$servername = 'localhost';
+$servername = 'localhost';
 $usernames = 'bishal';
 $password = 'bishal';
-$database = 'todoapp';*/
+$database = 'todoapp';
 
 
 $conn = mysqli_connect($servername, $usernames, $password, $database);

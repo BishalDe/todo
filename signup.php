@@ -7,25 +7,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $cpassword = $_POST['cpassword'];
     $date = date("Y-m-d");
     $time = date("h:i:s");
-    $exists = false;
     $alert = false;
-    if (($cpassword == $password) && $exists == false && $username != '' && $password != '') {
-        $sql="CREATE TABLE IF NOT EXISTS users (sno int(200) PRIMARY KEY AUTO_INCREMENT, user_name VARCHAR(50) NOT NULL, password VARCHAR(50) NOT NULL, date DATE, time TIME)";
-        mysqli_query($conn, $sql);
-        $sql = "INSERT INTO users (user_name,password,date,time) VALUES ('$username', '$password','$date','$time')";
-        $result = mysqli_query($conn, $sql);
-        if ($result) {
-            $alert = true;
-        } else {
-            echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+    $sql = "CREATE TABLE IF NOT EXISTS USER_DATA (sno int(200) PRIMARY KEY AUTO_INCREMENT, user_name VARCHAR(50) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL, date DATETIME)";
+    mysqli_query($conn, $sql);
+
+    $existsql = "SELECT * FROM USER_DATA WHERE user_name='$username'";
+    $result = mysqli_query($conn, $existsql);
+    $rows = mysqli_num_rows($result);
+
+    if ($rows > 0) {
+        echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>FAILED   </strong>Username Already Exisits..!<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>';
+    } else {
+  
+        if (($cpassword == $password) && $username != '' && $password != '') {
+            $hash=password_hash($password,PASSWORD_DEFAULT);
+            
+            $sql = "INSERT INTO USER_DATA (user_name,password,date) VALUES ('$username', '$hash',CURRENT_TIMESTAMP())";
+            $result = mysqli_query($conn, $sql);
+            if ($result) {
+                $alert = true;
+            } else {
+                echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
            <strong>FAILED</strong><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
          </div>';
-        }
-    } else {
+            }
+        } else {
 
-        echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">
+            echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">
             <strong>FAILED</strong><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>';
+        }
     }
 }
 
@@ -64,11 +77,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
             <div class="mb-3">
                 <label for="exampleInputPassword1" class="form-label">Password</label>
-                <input type="text" class="form-control" id="exampleInputPassword1" name="password">
+                <input type="text" class="form-control" id="exampleInputPassword1" minlength="8" name="password">
             </div>
             <div class="mb-3">
                 <label for="exampleInputPassword2" class="form-label">Confirm Password</label>
-                <input type="password" class="form-control" id="exampleInputPassword2" name="cpassword">
+                <input type="password" class="form-control" id="exampleInputPassword2" minlength="8" name="cpassword">
                 <div id="emailHelp" class="form-text">Make Sure to enter your password correctly.</div>
             </div>
             <button type="submit" class="btn btn-primary">SignUp</button>

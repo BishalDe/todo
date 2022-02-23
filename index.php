@@ -1,20 +1,29 @@
 <?php
+session_start();
+$_SESSION['loggedin'] = false;
 $error = false;
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   require 'partials/_database.php';
-
+  $sql = "CREATE TABLE IF NOT EXISTS USER_DATA (sno int(200) PRIMARY KEY AUTO_INCREMENT, user_name VARCHAR(50) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL, date DATETIME)";
+  mysqli_query($conn, $sql);
   $username = $_POST['username'];
   $password = $_POST['password'];
 
-  $sql = "SELECT * from users where user_name='$username' and password='$password'";
+  $sql = "SELECT * from USER_DATA where user_name='$username'";
   $result = mysqli_query($conn, $sql);
   $num = mysqli_num_rows($result);
   if ($num == 1) {
-
-    session_start();
-    $_SESSION['loggedin'] = true;
-    $_SESSION['username'] = $username;
-    header("Location: homepage.php");
+    while ($row = mysqli_fetch_assoc($result)) {
+      if (password_verify($password, $row['password'])) {
+        $login = true;
+        $_SESSION['loggedin'] = true;
+        $_SESSION['username'] = $username;
+        header("Location: homepage.php");
+      }
+      else {
+        $error = true;
+      }
+    }
   } else {
     $error = true;
   }
@@ -56,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       </div>
       <div class="mb-3">
         <label for="exampleInputPassword1" class="form-label">Password</label>
-        <input type="text" class="form-control" id="exampleInputPassword1" name="password">
+        <input type="password" class="form-control" minlength="8" id="exampleInputPassword1" name="password">
       </div>
       <button type="submit" class="btn btn-primary">Login</button>
       <a href="signup.php" class="btn btn-dark">SignUp</a>
